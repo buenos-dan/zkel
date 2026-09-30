@@ -83,7 +83,7 @@
                            map)))
 
 (defun zk--header ()
-  (list "  " (zk--header-action "Dashboard" #'zk-home) "    "
+  (list "  " (zk--header-action "ZK" #'zk-home) "    "
         (zk--header-action "+ Add task" #'zk-capture-task) "    "
         (zk--header-action "Today" #'zk-today) "    "
         (zk--header-action "Search" #'zk-search) "    "
@@ -321,7 +321,7 @@ already had unsaved edits, leaving those edits and this action in memory."
     ("w" "Week" zk-week)
     ("p" "Weekly review" zk-weekly)]
    ["Navigate"
-    ("h" "Dashboard" zk-home)
+    ("h" "ZK" zk-home)
     ("f" "Find note" zk-find-note)
     ("s" "Full-text search" zk-search)
     ("x" "Task actions…" zk-item-menu)

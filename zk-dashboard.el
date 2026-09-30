@@ -458,7 +458,7 @@
   (setq-local truncate-lines t line-spacing 0.12
               left-margin-width 2 right-margin-width 2
               header-line-format
-              '((:propertize "  ZK / Dashboard" face bold)
+              '((:propertize "  ZK" face bold)
                 "    c Add task    n New note    s Search    ? Commands")
               mode-line-format
               '("  ZK  " (:eval (format "%d open tasks / %d notes"
