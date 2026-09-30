@@ -1,0 +1,40 @@
+;;; zk-test-helper.el --- Temporary library fixtures -*- lexical-binding: t; -*-
+(require 'ert)
+(require 'zk)
+(require 'zk-home)
+(require 'zk-inbox-review)
+
+(defmacro zk-test-library (&rest body)
+  `(let* ((zk-root (file-name-as-directory (make-temp-file "zk-v2-" t)))
+          (zk-inbox-file "my-inbox.org") (zk-agenda-file "my-agenda.org")
+          (zk-org-note-directory "org-notes/") (zk-markdown-note-directory "md-notes/")
+          (org-id-locations-file (expand-file-name "ids" zk-root))
+          (org-agenda-files nil) (zk-change-hook nil) (org-mode-hook nil)
+          (org-log-done nil) (make-backup-files nil) (auto-save-default nil)
+          (zk-agenda--cache nil)
+          (zk-notes--cache (make-hash-table :test #'equal))
+          (zk-test-window-configuration (current-window-configuration)))
+     (unwind-protect (progn ,@body)
+       (when (timerp zk-home--timer) (cancel-timer zk-home--timer))
+       (dolist (b (buffer-list))
+         (when (buffer-live-p b)
+           (with-current-buffer b
+             (when (or (and buffer-file-name (file-in-directory-p buffer-file-name zk-root))
+                       (equal (buffer-name) "*ZK*") (equal (buffer-name) "*ZK Inbox*")
+                       (equal (buffer-name) "*Org Agenda*"))
+               (set-buffer-modified-p nil) (setq-local kill-buffer-query-functions nil)
+               (kill-buffer b)))))
+       (set-window-configuration zk-test-window-configuration)
+       (delete-directory zk-root t))))
+
+(defun zk-test-write (file contents)
+  (make-directory (file-name-directory file) t)
+  (with-temp-file file (insert contents)) file)
+
+(defun zk-test-project () (zk-project-create "Ship prototype" "Work"))
+
+(defun zk-test-task (&optional state title)
+  (let ((project (zk-test-project)) (inbox (zk-capture (or title "Action"))))
+    (zk-inbox-process inbox project :state (or state "TODO"))))
+
+(provide 'zk-test-helper)
