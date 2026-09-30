@@ -57,7 +57,7 @@
 (defface zk-dashboard-overdue '((t (:inherit warning)))
   "Past dates." :group 'zk-dashboard)
 
-(defconst zk-dashboard-buffer-name "*ZK Dashboard*")
+(defconst zk-dashboard-buffer-name "*ZK*")
 (defconst zk-dashboard--groups '("Overdue" "Today" "Upcoming" "Unscheduled" "Waiting"))
 (defvar zk-dashboard--metadata-cache (make-hash-table :test #'equal))
 (defvar zk-dashboard--refresh-timer nil)
